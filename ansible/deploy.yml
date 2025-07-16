@@ -1,0 +1,8 @@
+- name: Run Docker container
+  hosts: web
+  become: true
+  tasks:
+    - name: Load and run the flask container
+      shell: docker run -d -p 5000:5000 --name flask-app flask-app:latest
+      args:
+        chdir: /home/ubuntu
