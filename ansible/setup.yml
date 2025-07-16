@@ -13,10 +13,5 @@
          name: docker
          state: started
          enabled: true
-     - name: Pull image from private repository
-       shell: docker pull flask-app:latest
-       args:
-         chdir: /home/ubuntu
-     - name: Run the flask container
-       shell: docker run -d -p 5000:5000 --name flask-app flask-app:latest
+    
 ...
