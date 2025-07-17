@@ -37,7 +37,7 @@ pipeline{
     withCredentials([sshUserPrivateKey(credentialsId: 'ec2-ssh', keyFileVariable: 'KEY')]) {
       sh '''
       cd ansible
-      ansible-playbook -i hosts.ini setup.yml --private-key=$KEY
+      ansible-playbook -i hosts.ini setup.yml --private-key=$KEY -e "ansible_ssh_common_args='-o StrictHostKeyChecking=no'"
       '''
     }
   }
