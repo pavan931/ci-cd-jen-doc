@@ -62,12 +62,15 @@ pipeline{
     }
 }
 
-        stage('Run Application with Ansible') {
+        // If it is with ssh key from jenkins ui then for sure you have to mention withcredentials([])
+       stage('Run Application with Ansible') {
       steps {
+          withCredentials([sshUserPrivateKey(credentialsId:'ec2-ssh',keyFileVariable: 'KEY')]){
         sh '''
         cd ansible
-        ansible-playbook -i hosts.ini deploy.yml
+        ansible-playbook -i hosts.ini deploy.yml --private-key=$KEY -e "ansible_ssh_common_args='-o StrictHostKeyChecking=no'" 
         '''
+          }
       }
     }
     }
