@@ -30,5 +30,25 @@ docker run -d -u root \
   --env JAVA_OPTS=-Djava.io.tmpdir=/var/jenkins_home/tmp \   - this is for storing temporary files then container wont face disk space issues
   jenkins/jenkins:lts  - create own image that involves ansible,docker,if needed aws cli
 
+
+  Volume Mounting
+
+-> sudo mkdir -p /mnt/newvol
+Mount the volume to /mnt/newvol
+Assuming your volume is /dev/xvdk (check with lsblk):
+-> sudo mount /dev/xvdk /mnt/newvol
+Make it persist after reboot
+-> sudo nano /etc/fstab
+it is good practice to offload heavy usage (like Jenkins builds, Docker images) to EBS to reduce root disk usage and improve performance.
+-> sudo mkdir -p /mnt/newvol/docker
+-> sudo nano /etc/docker/daemon.json
+-> {
+  "data-root": "/mnt/newvol/docker"
+}
+-> docker info | grep "Docker Root Dir"
+Docker Root Dir: /mnt/newvol/docker
+
+
+
   
 
