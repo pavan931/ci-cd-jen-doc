@@ -2,7 +2,7 @@ pipeline{
     agent any
     environment{
         IMAGE='flask-app:latest'
-        EC2_IP='13.56.233.46'
+        EC2_IP='54.183.90.174    '
     }
     stages{
         stage('checkout'){
