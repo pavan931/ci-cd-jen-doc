@@ -34,7 +34,7 @@ pipeline{
 
         stage('Provision Remote with Docker + bzip2') {
   steps {
-    withCredentials([sshUserPrivateKey(credentialsId: 'ec2-ssh-key', keyFileVariable: 'KEY')]) {
+    withCredentials([sshUserPrivateKey(credentialsId: 'ec2-ssh', keyFileVariable: 'KEY')]) {
       sh '''
       cd ansible
       ansible-playbook -i hosts.ini setup.yml --private-key=$KEY
@@ -53,7 +53,7 @@ pipeline{
       
          stage('Copy Image to EC2') {
     steps {
-        withCredentials([sshUserPrivateKey(credentialsId: 'ec2-ssh-key', keyFileVariable: 'KEY')]) {
+        withCredentials([sshUserPrivateKey(credentialsId: 'ec2-ssh', keyFileVariable: 'KEY')]) {
             sh '''
             docker save flask-app:latest | bzip2 | \
             ssh -o StrictHostKeyChecking=no -i $KEY ubuntu@${EC2_IP} 'bunzip2 | sudo docker load'
