@@ -31,7 +31,7 @@ docker run -d -u root \
   jenkins/jenkins:lts  - create own image that involves ansible,docker,if needed aws cli
 
 
-  Volume Mounting
+********  Volume Mounting
 
 -> sudo mkdir -p /mnt/newvol
 Mount the volume to /mnt/newvol
@@ -48,7 +48,22 @@ it is good practice to offload heavy usage (like Jenkins builds, Docker images) 
 -> docker info | grep "Docker Root Dir"
 Docker Root Dir: /mnt/newvol/docker
 
+******* ssh into another ec2 instance using ansible playbook
 
+Method 1: Directly mount the volume during docker run (But this is not safe cause if some has access to that ec2 then they might know the key)
+-v /home/ubuntu/.ssh:/root/.ssh/
+
+Method 2 : If you want to keep the key secure, use jenkins ui sshUserPrivateKey (Secured Method)
+username:ubuntu
+KEY:privatekey
+use this in stage in pipeline using withCredentials([]){}
+example:
+   withCredentials([sshUserPrivateKey(credentialsId:'ec2-ssh',keyFileVariable: 'KEY')]){
+        sh '''
+        cd ansible
+        ansible-playbook -i hosts.ini deploy.yml --private-key=$KEY -e "ansible_ssh_common_args='-o StrictHostKeyChecking=no'"  
+        '''
+          }
 
   
-
+And if ansible is installed in jenkins container then its fine to run the playbook no need to be installed in the ec2 instance where jenkins container is running
